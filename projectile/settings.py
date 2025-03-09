@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "core.apps.CoreConfig",
     "rest_framework",
+    "core.apps.CoreConfig",
+    "accountio.apps.AccountioConfig"
 ]
 
 AUTH_USER_MODEL ="core.User"
