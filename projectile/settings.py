@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -20,6 +21,10 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_DIR=os.path.realpath(os.path.join(BASE_DIR,"media"))
+
+MEDIA_ROOT=MEDIA_DIR
+MEDIA_URL="/media/"
 
 
 # Quick-start development settings - unsuitable for production
@@ -43,9 +48,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    #project apps
     "rest_framework",
     "core.apps.CoreConfig",
-    "accountio.apps.AccountioConfig"
+    "accountio.apps.AccountioConfig",
+    "drf_spectacular",
+    "rest_framework_simplejwt",
 ]
 
 AUTH_USER_MODEL ="core.User"
@@ -110,6 +118,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK={"DEFAULT_SCHEMA_CLASS":"drf_spectacular.openapi.AutoSchema",
+                "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES":(
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication"
+        ),
+    }
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),  # Token expires in 60 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),  # Refresh token expires in 1 day
+    "ROTATE_REFRESH_TOKENS": True,  # Issue new refresh token on refresh
+    "BLACKLIST_AFTER_ROTATION": True,  # Blacklist old refresh token
+    "UPDATE_LAST_LOGIN": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    }
+
+APPEND_SLASH =False
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
